@@ -1,14 +1,8 @@
-/* ============================================================
-   GAMESET — activity.js
-   Depends on api.js and common.js, loaded before this file.
-   ============================================================ */
 
 let currentTab = "following";
 
 async function getMyOwnActivity() {
-  // My reviews written on any game, converted to the same format used
-  // in the feed. Looks up the real game (name + cover) by the gameKey
-  // stored with the review, whether it's a demo game or from the API.
+
   const myReviews = getMyReviews("Fenx");
   return Promise.all(myReviews.map(async (r) => {
     const game = await fetchGameById(r.gameKey);
