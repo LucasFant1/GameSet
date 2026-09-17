@@ -1,8 +1,3 @@
-/* ============================================================
-   GAMESET — tierlists-data.js
-   Definitions and data shared between tierlists.html and
-   tierlist-editor.html. Depends on api.js (DEMO_GAMES) loaded before.
-   ============================================================ */
 
 const TIER_DEFS = [
   { key: "S", label: "S", color: "#ec4899" },
@@ -13,10 +8,6 @@ const TIER_DEFS = [
   { key: "F", label: "F", color: "#6b6679" },
 ];
 
-/* Each tier list can have its own set of tiers (name + color), editable
-   at creation time. This returns a list's tiers, or the defaults
-   (S/A/B/C/D/F) if it doesn't have its own (e.g. old lists saved before
-   this feature existed). */
 function getTierDefs(list) {
   return (list && list.tierDefs && list.tierDefs.length) ? list.tierDefs : TIER_DEFS;
 }
@@ -35,12 +26,7 @@ function newTierKey() {
   return "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
 }
 
-/* ---------- Ready-made tier list suggestions ----------
-   Each comes with a list of real games to already populate the game
-   pool when creating one — no need to search for them one by one. The
-   rows (tiers) stay the default (S/A/B/C/D/F); only the pool's content
-   changes. "dynamic: released" fetches the latest releases straight
-   from the API instead of using a fixed list. */
+/* ---------- Ready-made tier list suggestions ----------*/
 const TIERLIST_SUGGESTIONS = [
   {
     key: "zelda", title: "Best Zelda games", icon: "🗡️",
@@ -252,10 +238,7 @@ function newTierListId() {
   return "tl-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-/* ---------- Resolve the real covers for every game in a tier list ----------
-   Demo tier lists (and the editor's initial pool) use fixed covers;
-   this swaps each one for the real cover from the API (if the RAWG key
-   is configured), keeping the demo image as a fallback. */
+/* ---------- Resolve the real covers for every game in a tier list ----------*/
 async function hydrateTierListCovers(list) {
   const defs = getTierDefs(list);
   const allNames = defs.flatMap(def => (list.tiers[def.key] || []).map(g => g.name));
