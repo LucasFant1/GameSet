@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — profile.js
-   Depends on api.js, common.js, and tierlists-data.js, loaded before.
-   ============================================================ */
 
 function renderProfileHead() {
   const profile = getMyProfile();
