@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — tierlists.js
-   Depends on api.js and tierlists-data.js, loaded before this file.
-   ============================================================ */
 
 /* ---------- Suggestions for tier lists to create ---------- */
 function renderSuggestions() {
@@ -100,7 +96,6 @@ function renderCard(list) {
 }
 
 async function renderGrids() {
-  // Your tier lists — always yours, most recent first
   const myGrid = document.getElementById("myTierlistsGrid");
   const myEmpty = document.getElementById("myTierlistsEmpty");
   const mine = getOwnTierLists();
@@ -110,11 +105,10 @@ async function renderGrids() {
   const myHydrated = await Promise.all(mine.map(hydrateTierListCovers));
   myHydrated.forEach(list => myGrid.appendChild(renderCard(list)));
 
-  // Community tier lists — only from other people, sorted
   const communityGrid = document.getElementById("communityTierlistsGrid");
   let community = [...DEMO_TIERLISTS];
   if (sortMode === "popular") community.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-  // "recent" keeps the original order (most recent first, as already listed)
+  
 
   communityGrid.innerHTML = "";
   const communityHydrated = await Promise.all(community.map(hydrateTierListCovers));
