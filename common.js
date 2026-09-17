@@ -1,15 +1,4 @@
-/* ============================================================
-   GAMESET — common.js
-   Shared header behavior for every page: search, profile
-   dropdown, and notifications dropdown.
-   Depends on api.js, which must be loaded before this file.
-   ============================================================ */
 
-/* ---------- Report modal (shared across every page) ----------
-   There's no backend yet, so "sending" the report just opens the
-   person's email app with the report already filled in, addressed to
-   you — they just confirm sending. If you add a backend later, swap
-   the mailto: below for a fetch() to an endpoint like POST /reports. */
 const REPORT_EMAIL = "lumfanti@gmail.com";
 
 (function setupReportModal() {
@@ -86,9 +75,7 @@ function wireReportButton(el, target) {
   if (btn) btn.addEventListener("click", () => openReportModal(target));
 }
 
-/* ---------- Safety net: a broken image falls back to a placeholder ----------
-   If any <img> fails to load (dead link, CORS, etc.), swap it for a
-   discreet placeholder instead of showing the loose alt text. */
+/* ---------- Safety net: a broken image falls back to a placeholder ----------*/
 document.addEventListener("error", (e) => {
   const el = e.target;
   if (el.tagName !== "IMG" || el.dataset.fallbackApplied) return;
@@ -96,7 +83,7 @@ document.addEventListener("error", (e) => {
   const w = el.width || 300, h = el.height || 400;
   const label = encodeURIComponent((el.alt || "?").slice(0, 24));
   el.src = `https://placehold.co/${w}x${h}/1e1b29/6b6679?text=${label}`;
-}, true); // capture phase: an <img> "error" event doesn't bubble
+}, true); 
 
 /* ---------- Apply the saved profile (name/photo) to the header ---------- */
 (function applyProfileToHeader() {
