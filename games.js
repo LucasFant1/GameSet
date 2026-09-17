@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — games.js
-   Depends on api.js, loaded before this file.
-   ============================================================ */
 
 /* ---------- Listing state ---------- */
 let currentSort = "popular";
