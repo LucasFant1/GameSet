@@ -1126,11 +1126,7 @@ img{display:block;max-width:100%;}
 .dangerbtn:hover{background:rgba(236,72,153,.1);}
 
 
-/* ---------- Safety net: [hidden] always hides ----------
-   Some classes above use "display:flex" to position themselves when
-   visible; this can override the HTML `hidden` attribute because of
-   CSS rule ordering. This rule guarantees `hidden` always works, no
-   matter what the class defined before it. */
+/* ---------- Safety net: [hidden] always hides ----------*/
 [hidden]{display:none !important;}
 
 /* ---------- Responsive ---------- */
