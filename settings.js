@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — settings.js
-   Depends on api.js and common.js, loaded before this file.
-   ============================================================ */
 
 /* ---------- Panel: Profile ---------- */
 const profile = getMyProfile();
@@ -32,10 +28,6 @@ document.getElementById("removeAvatarBtn").addEventListener("click", () => {
   });
 });
 
-/* ---------- Resize the chosen image before saving ----------
-   Avoids storing giant photos in localStorage — shrinks it down to a
-   small square (good enough for an avatar) before converting to a
-   data URL. */
 function resizeImageToDataUrl(file, size, callback) {
   const reader = new FileReader();
   reader.onload = (e) => {
