@@ -1,12 +1,3 @@
-/* ============================================================
-   GAMESET — api.js
-   API config and helpers shared between index.html and game.html.
-
-   API used: RAWG Video Games Database (https://rawg.io/apidocs)
-   1) Create a free account at https://rawg.io/apidocs
-   2) Copy your key and paste it below in RAWG_API_KEY
-   Without a key, the site runs in DEMO MODE with sample data.
-   ============================================================ */
 
 const RAWG_API_KEY = "7fbed4e1ce3e4ae0a0b1683182d0164e";
 const RAWG_BASE = "https://api.rawg.io/api";
@@ -60,11 +51,7 @@ async function searchGames(query) {
   return DEMO_GAMES.filter(g => g.name.toLowerCase().includes(q));
 }
 
-/* ---------- Resolve a game's real cover by name ----------
-   Used anywhere that only has the game's NAME (community reviews,
-   activity, etc.) and needs the real cover from the API — instead of
-   relying on a fixed demo image. Without a RAWG key configured, it
-   falls back to DEMO_GAMES as usual. */
+/* ---------- Resolve a game's real cover by name ----------*/
 const coverCache = {};
 async function resolveGameCover(gameName) {
   if (coverCache[gameName]) return coverCache[gameName];
@@ -90,11 +77,7 @@ async function resolveGameCovers(gameNames) {
   return map;
 }
 
-/* ---------- Resolve full data for several games by name ----------
-   Used by the tier list suggestions: takes a list of real game names
-   and fetches the full object (cover, rating, slug) for each — via the
-   API if a RAWG key is configured, falling back to demo mode. Games
-   not found anywhere still show up (just without a cover). */
+/* ---------- Resolve full data for several games by name ----------*/
 async function resolveGamesByNames(names) {
   return Promise.all(names.map(async (name) => {
     try {
@@ -114,18 +97,30 @@ async function fetchGameById(idOrSlug) {
       || DEMO_GAMES[0];
 }
 
-/* ---------- Games related to a game ----------
-   Uses RAWG's suggestions endpoint (based on who played both).
-   Without an API key, falls back to demo mode: other games that share
-   at least one genre with the current game. */
+/* ---------- Games related to a game ----------*/
 async function fetchRelatedGames(game) {
   if (!game) return [];
-  const idOrSlug = game.slug || game.id;
-  const data = idOrSlug ? await rawgFetch(`/games/${idOrSlug}/suggested`) : null;
-  if (data && data.results) return data.results.slice(0, 6);
 
-  const myGenres = new Set((game.genre_slugs && game.genre_slugs.length)
-    ? game.genre_slugs
+  const apiGenreSlugs = (game.genres || []).map(g => g.slug).filter(Boolean);
+  const genreSlugs = apiGenreSlugs.length ? apiGenreSlugs : (game.genre_slugs || []);
+
+  if (hasApiKey && genreSlugs.length) {
+    const data = await rawgFetch("/games", {
+      genres: genreSlugs.slice(0, 3).join(","),
+      ordering: "-rating",
+      page_size: 10,
+    });
+    if (data && data.results) {
+      const currentId = String(game.id ?? "");
+      const currentSlug = game.slug || "";
+      const related = data.results.filter(g => String(g.id) !== currentId && g.slug !== currentSlug);
+      if (related.length) return related.slice(0, 6);
+    }
+  }
+
+  // Demo mode / API failed: other games that share at least one genre
+  const myGenres = new Set(genreSlugs.length
+    ? genreSlugs
     : (game.genres || []).map(g => (g.slug || g.name || "").toLowerCase()));
 
   return DEMO_GAMES
@@ -182,25 +177,17 @@ function statusBadgeHtml(status) {
   return `<span class="statusbadge" style="color:${s.color};border-color:${s.color}">${s.icon} ${s.label}</span>`;
 }
 
-/* ---------- Rating display ----------
-   Two scales coexist on the site:
-   - The API (RAWG) returns a rating from 0 to 5.
-   - Reviews written here use 0 to 10.
-   The functions below keep that explicit so the two never get mixed up. */
-
-// Rating from the API (0–5) → little stars, used on game cards
+/* ---------- Rating display ----------*/
 function starRating(rating) {
   const full = Math.round(rating || 0);
   return "★".repeat(full) + "☆".repeat(5 - full);
 }
 
-// A site review's score (0–10) → "8/10" with a star
 function scoreLabel(score) {
   const n = Number(score) || 0;
   return `★ ${n}/10`;
 }
 
-// Convert an API rating (0–5) to the site's scale (0–10)
 function apiRatingTo10(rating) {
   return Math.round((Number(rating) || 0) * 2 * 10) / 10;
 }
@@ -213,10 +200,7 @@ function nowStamp() {
   return `${date} at ${time}`;
 }
 
-/* ---------- Local reviews (no backend yet) ----------
-   Stored in the browser's localStorage, per game.
-   Swap this for calls to your own backend once you have a real
-   reviews API (e.g. POST /games/:id/reviews). */
+/* ---------- Local reviews (no backend yet) ----------*/
 const REVIEWS_KEY = "gameset:reviews";
 
 function getAllReviews() {
@@ -236,12 +220,7 @@ function saveReview(gameKey, review) {
   localStorage.setItem(REVIEWS_KEY, JSON.stringify(all));
 }
 
-/* ---------- Likes and replies (reviews and tier lists) ----------
-   Works for any type of content with a unique id: community reviews,
-   game reviews, and tier lists. Key = "type:id", e.g. "review:12" or
-   "tierlist:tl-abc123". Everything lives in localStorage for now —
-   swap this for calls to your own backend once you have a real
-   likes/comments API (e.g. POST /content/:key/like). */
+/* ---------- Likes and replies (reviews and tier lists) ----------*/
 const ENGAGEMENT_KEY = "gameset:engagement";
 
 function getAllEngagement() {
@@ -319,9 +298,9 @@ function getMyProfile() {
   const defaults = {
     name: "Fenx",
     bio: "Playing games since forever. Here to rate everything that passes through my hands.",
-    favorites: [null, null, null], // up to 3 games: { name, cover, key }
-    avatar: null, // profile photo data URL, or null to use the name's initial
-    reviewsPrivacy: "public", // "public" | "followers"
+    favorites: [null, null, null], 
+    avatar: null, 
+    reviewsPrivacy: "public", 
   };
   try {
     const saved = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {};
@@ -355,8 +334,7 @@ function getMyComments(user = "Fenx") {
   return out;
 }
 
-/* ---------- Demo reviews for the community feed ----------
-   Shared between community.html and activity.html. */
+/* ---------- Demo reviews for the community feed ----------*/
 const DEMO_COMMUNITY_REVIEWS = [
   { id: 1, user: "kaio_v", game: "Resident Evil Requiem", cover: DEMO_GAMES[0].background_image, stars: 8, text: "Pretty good ;)", likes: 37, comments: 3, time: "2h ago" },
   { id: 2, user: "Renan_", game: "Baldur's Gate 3", cover: DEMO_GAMES[7].background_image, stars: 10, text: "Finished my third campaign and still found something new. Best RPG of the decade, no exaggeration.", likes: 128, comments: 21, time: "4h ago" },
@@ -372,14 +350,7 @@ const DEMO_COMMUNITY_REVIEWS = [
   { id: 12, user: "diego_k", game: "Baldur's Gate 3", cover: DEMO_GAMES[7].background_image, stars: 7, text: "Act 3 still has too many bugs, but the freedom of choice makes up for it.", likes: 29, comments: 7, time: "3d ago" },
 ];
 
-/* ---------- Shared UI: reply box ----------
-   Renders the list of replies + a field to write a new one, inside the
-   `container` element. Used on the game page, the community feed, tier
-   lists, and the home page. `context` is a short piece of text (e.g.
-   the game's name) saved alongside the reply, used on the "My
-   comments" page to say where each reply was left.
-   Each reply can have a "reply" button that selects it as the target —
-   so whoever reads it knows exactly who the new reply is for. */
+/* ---------- Shared UI: reply box ----------*/
 function renderReplySection(container, key, onUpdate, context = "") {
   container.innerHTML = `
     <div class="replylist"></div>
@@ -400,7 +371,7 @@ function renderReplySection(container, key, onUpdate, context = "") {
   const btn = container.querySelector(".replyinput button");
 
   let selectedQuote = null;
-  quoteBox.style.display = "none"; // make sure it starts hidden, without depending on external CSS
+  quoteBox.style.display = "none"; 
 
   function setQuote(reply) {
     selectedQuote = reply ? { user: reply.user, text: reply.text } : null;
