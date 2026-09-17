@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — reviews-page.js
-   Depends on api.js and common.js, loaded before this file.
-   ============================================================ */
 
 function renderMyReviews() {
   const list = document.getElementById("myReviewsList");
