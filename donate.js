@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — donate.js
-   Depends on api.js and common.js (top search/profile), loaded before.
-   ============================================================ */
 
 /* ---------- Frequency (monthly / one-time) ---------- */
 let frequency = "monthly";
