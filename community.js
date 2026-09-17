@@ -1,10 +1,3 @@
-/* ============================================================
-   GAMESET — community.js
-   Depends on api.js and common.js, loaded before this file.
-   The review data here is demo data (DEMO_COMMUNITY_REVIEWS,
-   defined in api.js) — swap it for a call to your own backend
-   (e.g. GET /reviews?sort=recent) once you have your own API.
-   ============================================================ */
 
 /* ---------- State ---------- */
 let currentTab = "recent";
