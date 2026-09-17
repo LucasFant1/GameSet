@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — tierlist-editor.js
-   Depends on api.js and tierlists-data.js, loaded before this file.
-   ============================================================ */
 
 /* ---------- Tier list state ---------- */
 const urlParams = new URLSearchParams(window.location.search);
@@ -92,10 +88,7 @@ function setupDropZone(el, onDrop) {
   });
 }
 
-/* ---------- Tier configuration modal (name, color, remove) ----------
-   A single central modal shared by every row — avoids the floating
-   panel getting crooked or clipped depending on which row was
-   clicked. */
+/* ---------- Tier configuration modal (name, color, remove) ----------*/
 let configTierKey = null;
 
 function openTierConfigModal(key) {
@@ -268,7 +261,7 @@ function renderPool() {
     });
   }
 
-  // drag a game back to the pool (from a tier or the queue)
+  
   setupDropZone(grid, () => {});
 }
 
@@ -363,12 +356,12 @@ async function init() {
 
   let pool;
   if (suggestion) {
-    // chosen suggestion: the pool already comes with that theme's games
+    
     pool = suggestion.dynamic === "released"
       ? (await fetchGamesList({ sortKey: "released", pageSize: 20 })).results
       : await resolveGamesByNames(suggestion.games);
   } else {
-    // no suggestion: initial pool with real trending games (falls back to demo without an API key)
+    
     pool = await fetchTrendingGames();
   }
 
