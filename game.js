@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — game.js  (game review page)
-   Depends on api.js, which must be loaded before this file.
-   ============================================================ */
 
 const params = new URLSearchParams(window.location.search);
 const gameIdOrSlug = params.get("id");
@@ -73,9 +69,7 @@ function truncate(text, max) {
   return text.slice(0, max).trim() + "…";
 }
 
-/* ---------- Community stats (local + base rating from the API) ----------
-   Local reviews are already 0–10; the API rating is 0–5, so it's
-   converted before entering the average to avoid mixing the scales. */
+/* ---------- Community stats (local + base rating from the API) ----------*/
 function renderCommunityStats(game) {
   const reviews = getReviewsFor(gameKeyFor(game));
   const localSum = reviews.reduce((s, r) => s + r.stars, 0);
@@ -171,7 +165,7 @@ spoilerToggle.addEventListener("click", () => {
 });
 
 /* ---------- Game status (played / completed / platinum / dropped) ---------- */
-let selectedStatus = "jogado"; // default: whoever reviewed it, played it
+let selectedStatus = "jogado"; 
 const statusButtons = document.querySelectorAll(".statusbtn");
 statusButtons.forEach(btn => {
   if (btn.dataset.status === selectedStatus) btn.classList.add("is-active");
@@ -230,7 +224,7 @@ async function init() {
       currentGame = cached;
       renderGame(cached);
     }
-  } catch { /* ignore */ }
+  } catch {}
 
   const game = await fetchGameById(gameIdOrSlug);
   currentGame = game;
