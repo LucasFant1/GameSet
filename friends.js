@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — friends.js
-   Depends on api.js and common.js, loaded before this file.
-   ============================================================ */
 
 let currentTab = "following";
 
