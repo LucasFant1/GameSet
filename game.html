@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameSet — avaliar jogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=202609152325">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="logo" href="index.html"><img src="logo.png?v=202609152325" alt="GameSet" class="logo__img"></a>
+
+    <nav class="mainnav">
+      <a href="community.html" class="mainnav__link">Community</a>
+      <a href="donate.html" class="mainnav__link">Donate</a>
+      <a href="games.html" class="mainnav__link">Games</a>
+      <a href="tierlists.html" class="mainnav__link">TierLists</a>
+    </nav>
+
+    <div class="topbar__right">
+      <div class="searchbox">
+        <input id="searchInput" type="text" placeholder="Search Games…" autocomplete="off">
+        <button id="searchBtn" aria-label="Buscar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div id="searchResults" class="searchresults"></div>
+      </div>
+
+      <div class="notif" id="notifMenu">
+        <button class="iconbtn" id="notifBtn" aria-label="Notificações">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 01-3.4 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span class="notif__badge" id="notifBadge" hidden></span>
+        </button>
+        <div class="notif__dropdown" id="notifDropdown">
+          <div class="notif__head">Notifications</div>
+          <div class="notif__list"></div>
+          <a href="atividade.html" class="notif__footer">View all activity</a>
+        </div>
+      </div>
+
+      <div class="profile" id="profileMenu">
+        <button class="profile__btn" id="profileBtn">
+          <span class="avatar">F</span>
+          <span class="profile__name">Fenx</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="profile__dropdown" id="profileDropdown">
+          <div class="profile__dropdown-head"><span class="avatar avatar--sm">F</span><strong>Fenx</strong></div>
+          <a href="perfil.html">Perfil</a>
+          <a href="amigos.html">Friends</a>
+          <a href="atividade.html">Activity</a>
+          <a href="reviews.html">Reviews</a>
+          <a href="comentarios.html">Comments</a>
+          <hr>
+          <a href="configuracoes.html">Settings</a>
+          <a href="#" id="signOutLink">Log out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page gamepage" id="gamePage">
+
+  <a href="index.html" class="backlink">‹ Back</a>
+
+  <div id="gameLoading" class="gameloading">Loading game…</div>
+
+  <section class="gamehero" id="gameHero" hidden>
+    <img class="gamehero__cover" id="gameCover" src="" alt="">
+
+    <div class="gamehero__info">
+      <h1 id="gameTitle">—</h1>
+      <div class="gamehero__meta" id="gameMeta"></div>
+      <p class="gamehero__desc" id="gameDesc"></p>
+
+      <div class="gamehero__stat">
+        <span class="gamehero__stat-num" id="communityAvg">—</span>
+        <span class="gamehero__stat-label">community note · <span id="communityCount">0</span> reviews</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ratebox" id="rateBox" hidden>
+    <h2>Your review</h2>
+
+    <div class="ratebox__stars" id="starPicker" aria-label="Choose your rating from 1 to 10.">
+      <button type="button" class="star" data-value="1">★</button>
+      <button type="button" class="star" data-value="2">★</button>
+      <button type="button" class="star" data-value="3">★</button>
+      <button type="button" class="star" data-value="4">★</button>
+      <button type="button" class="star" data-value="5">★</button>
+      <button type="button" class="star" data-value="6">★</button>
+      <button type="button" class="star" data-value="7">★</button>
+      <button type="button" class="star" data-value="8">★</button>
+      <button type="button" class="star" data-value="9">★</button>
+      <button type="button" class="star" data-value="10">★</button>
+      <span class="ratebox__value" id="ratingValue">Tap to rate</span>
+    </div>
+
+    <div class="statuspicker" id="statusPicker">
+      <span class="statuspicker__label">Status</span>
+      <div class="statuspicker__row">
+        <button type="button" class="statusbtn" data-status="jogado">🎮 Played</button>
+        <button type="button" class="statusbtn" data-status="zerado">🏁 Beat</button>
+        <button type="button" class="statusbtn" data-status="platinado">🏆 Platinum</button>
+        <button type="button" class="statusbtn" data-status="dropado">🚪 backloggd</button>
+      </div>
+    </div>
+
+    <textarea id="reviewText" class="ratebox__textarea" placeholder="Escreva sua review (opcional)…" maxlength="500" rows="4"></textarea>
+
+    <div class="ratebox__foot">
+      <button type="button" id="spoilerToggle" class="spoilertoggle" aria-pressed="false">
+        <span class="spoilertoggle__icon">⚠</span> contains spoilers
+      </button>
+      <button id="submitReview" class="btn-primary">Post review</button>
+    </div>
+
+    <p id="submitMsg" class="ratebox__msg"></p>
+  </section>
+
+  <section class="gamereviews">
+    <h2>Community reviews</h2>
+    <div id="communityReviews" class="reviews__list"></div>
+    <p id="noReviews" class="gamereviews__empty" hidden>No one has rated this game yet. Be the first!</p>
+  </section>
+
+  <section class="relatedgames" id="relatedGamesSection" hidden>
+    <h2>Related games</h2>
+    <div class="relatedgames__grid" id="relatedGamesGrid"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__links">
+      <a href="contato.html">Contact</a>
+      <a href="termos.html">Terms</a>
+      <a href="privacidade.html">Privacy</a>
+      <a href="sobre.html">About</a>
+    </div>
+    <p class="footer__copy">© 2026 GameSet — made by gamers, for gamers.</p>
+    <div class="footer__social">
+      <a href="#" aria-label="Instagram" title="Instagram">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>
+      </a>
+      <a href="#" aria-label="X" title="X">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </a>
+      <a href="#" aria-label="Discord" title="Discord">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="6" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/></svg>
+      </a>
+      <a href="#" aria-label="YouTube" title="YouTube">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 9.5l5 2.5-5 2.5v-5Z" fill="currentColor"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="api.js?v=202609152325"></script>
+<script src="common.js?v=202609152325"></script>
+<script src="game.js?v=202609152325"></script>
+</body>
+</html>
