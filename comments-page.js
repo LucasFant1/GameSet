@@ -1,7 +1,3 @@
-/* ============================================================
-   GAMESET — comments-page.js
-   Depends on api.js and common.js, loaded before this file.
-   ============================================================ */
 
 function describeKey(key, context) {
   if (context) {
